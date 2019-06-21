@@ -6,7 +6,11 @@ namespace WorkerWrapper.ConsoleApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("paste description");
+            string description = Console.ReadLine();
+            var parser = new Parser(description);
+            var mine = parser.ConfigMine();
+            Console.ReadLine();
         }
     }
 }
