@@ -6,5 +6,13 @@ namespace WorkerWrapper.Domain.Models.Actions
         {
             throw new System.NotImplementedException();
         }
+
+        public enum Direction
+        {
+            Right = 0,
+            Down,
+            Left,
+            Top
+        }
     }
 }

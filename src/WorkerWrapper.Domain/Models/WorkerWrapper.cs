@@ -5,24 +5,25 @@ namespace WorkerWrapper.Domain.Models
 {
     public class WorkerWrapper
     {
-        private Point _position;
-        private Direction _direction;
-
-        private List<IBooster> _boosters;
-
         public WorkerWrapper(Point initialPosition)
         {
-            _position = initialPosition;
-            _direction = Direction.Right;
-            _boosters = new List<IBooster>();
+            Position = initialPosition;
+            Direction = Actions.MoveAction.Direction.Right;
+            Boosters = new List<IBooster>();
+            OrangePoints = new List<Point> {
+                initialPosition,
+                initialPosition + new Point(1, 0),
+                initialPosition + new Point(1, 1),
+                initialPosition + new Point(1, -1)
+            };
         }
 
-        public enum Direction
-        {
-            Right = 0,
-            Down,
-            Left,
-            Top
-        }
+        public Point Position { get; set; }
+
+        public List<Point> OrangePoints { get; set; }
+
+        public Actions.MoveAction.Direction Direction { get; set; }
+
+        public List<IBooster> Boosters { get; set; }
     }
 }
