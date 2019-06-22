@@ -8,6 +8,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# mac
+.DS_Store
+
+# ICFPC specific
+/output/
+
 # User-specific files
 *.rsuser
 *.suo
