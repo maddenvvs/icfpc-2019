@@ -181,12 +181,10 @@ namespace WorkerWrapper.ConsoleApp
 
                 switch (boosterString[0])
                 {
-
-
                     case 'B': return new KeyValuePair<Point, IBooster>(point,new ManipulatorExtension());
-                    
                     case 'F': return new KeyValuePair<Point, IBooster>(point,new FastWheels());
                     case 'L': return new KeyValuePair<Point, IBooster>(point,new Drill());
+                    case 'R': return new KeyValuePair<Point, IBooster>(point,new TeleportBooster());
                     case 'X': return new KeyValuePair<Point, IBooster>(point,new XBooster());
                     default:
                       throw new Exception($"unknown booster type {boosterString[0]}");
