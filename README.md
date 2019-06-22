@@ -23,7 +23,8 @@ $ dotnet run -c Release < prob-NNN.desc > prob-NNN.sol
 
 
 ### runner
-
+from main dir
 ```
 utils/runner 'dotnet run -c Release --project src/WorkerWrapper.ConsoleApp'
+rm -f tmp/sol.zip && zip -j tmp/sol.zip output/*.sol
 ```
