@@ -2,7 +2,7 @@ using System;
 
 namespace WorkerWrapper.Domain.Geometry
 {
-    public struct Point
+    public struct Point : IEquatable<Point>
     {
         public static readonly Point Origin = new Point(0, 0);
 
@@ -15,6 +15,24 @@ namespace WorkerWrapper.Domain.Geometry
         public int X { get; }
 
         public int Y { get; }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (32768 * Y) + X;
+            }
+        }
+
+        public override bool Equals(object other)
+        {
+            return Equals((Point)other);
+        }
+
+        public bool Equals(Point other)
+        {
+            return X == other.X && Y == other.Y;
+        }
 
         public static Point operator +(Point first, Point second)
         {

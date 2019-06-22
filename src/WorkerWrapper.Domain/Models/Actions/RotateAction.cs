@@ -8,12 +8,12 @@ namespace WorkerWrapper.Domain.Models.Actions
 
         public static readonly RotateAction CounterClockwise = new RotateAction(Rotation.CounterClockwise);
 
-        private readonly Rotation _rotation;
-
         private RotateAction(Rotation rotation)
         {
-            _rotation = rotation;
+            Rotation = rotation;
         }
+
+        public Rotation Rotation { get; }
         public void Execute(ActionContext context)
         {
             var worker = context.WorkerWrapper;
@@ -21,13 +21,21 @@ namespace WorkerWrapper.Domain.Models.Actions
             for (var ii = 0; ii < worker.OrangePoints.Count; ii++)
             {
                 worker.OrangePoints[ii] =
-                    worker.OrangePoints[ii].Rotate(worker.Position, _rotation);
+                    worker.OrangePoints[ii].Rotate(worker.Position, Rotation);
             }
 
-            var diff = _rotation == Rotation.Clockwise ? 1 : -1;
-            worker.Direction = (MoveAction.Direction)((((int)worker.Direction + diff) % 4 + 4) % 4);
+            var diff = Rotation == Rotation.Clockwise ? 1 : -1;
+            worker.Direction = (RotateAction.Direction)((((int)worker.Direction + diff) % 4 + 4) % 4);
 
-            // TODO: update mine yellow cells
+            context.Mine.TryColorInYellow(worker.Position, worker.OrangePoints);
+        }
+
+        public enum Direction
+        {
+            Right = 0,
+            Down,
+            Left,
+            Top
         }
     }
 }

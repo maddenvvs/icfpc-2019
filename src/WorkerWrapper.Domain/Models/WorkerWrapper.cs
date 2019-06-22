@@ -8,7 +8,7 @@ namespace WorkerWrapper.Domain.Models
         public WorkerWrapper(Point initialPosition)
         {
             Position = initialPosition;
-            Direction = Actions.MoveAction.Direction.Right;
+            Direction = Actions.RotateAction.Direction.Right;
             Boosters = new List<IBooster>();
             OrangePoints = new List<Point> {
                 initialPosition,
@@ -22,7 +22,7 @@ namespace WorkerWrapper.Domain.Models
 
         public List<Point> OrangePoints { get; set; }
 
-        public Actions.MoveAction.Direction Direction { get; set; }
+        public Actions.RotateAction.Direction Direction { get; set; }
 
         public List<IBooster> Boosters { get; set; }
     }

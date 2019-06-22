@@ -65,7 +65,7 @@ namespace WorkerWrapper.Domain.Geometry
             return this;
         }
 
-        public IEnumerable<Point> BorderPoints()
+        public IEnumerable<Point> InnerBorderPoints()
         {
             var pointsLength = _points.Length;
 
@@ -107,6 +107,53 @@ namespace WorkerWrapper.Domain.Geometry
                     for (var x = firstPoint.X; x < secondPoint.X; x++)
                     {
                         yield return new Point(x, firstPoint.Y);
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<Point> OuterBorderPoints()
+        {
+            var pointsLength = _points.Length;
+
+            for (var ii = 0; ii < pointsLength; ii++)
+            {
+                var firstPoint = _points[ii];
+                var secondPoint = _points[(ii + 1) % pointsLength];
+
+                if (firstPoint.X == secondPoint.X)
+                {
+                    // go down
+                    if (firstPoint.Y > secondPoint.Y)
+                    {
+                        for (var y = firstPoint.Y - 1; y >= secondPoint.Y; y--)
+                        {
+                            yield return new Point(firstPoint.X - 1, y);
+                        }
+                    }
+                    // go up
+                    else
+                    {
+                        for (var y = firstPoint.Y; y < secondPoint.Y; y++)
+                        {
+                            yield return new Point(firstPoint.X, y);
+                        }
+                    }
+                }
+                // go left
+                else if (firstPoint.X > secondPoint.X)
+                {
+                    for (var x = firstPoint.X - 1; x <= secondPoint.X; x--)
+                    {
+                        yield return new Point(x, firstPoint.Y);
+                    }
+                }
+                // go right
+                else
+                {
+                    for (var x = firstPoint.X; x < secondPoint.X; x++)
+                    {
+                        yield return new Point(x, firstPoint.Y - 1);
                     }
                 }
             }
