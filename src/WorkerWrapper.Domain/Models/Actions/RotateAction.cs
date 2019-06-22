@@ -8,12 +8,20 @@ namespace WorkerWrapper.Domain.Models.Actions
 
         public static readonly RotateAction CounterClockwise = new RotateAction(Rotation.CounterClockwise);
 
+        public static readonly int[][] RotationMatrix = new int[][] {
+            new int[] {0, 1, 2, -1},
+            new int[] {-1, 0, 1, 2},
+            new int[] {-2, -1, 0, 1},
+            new int[] {1, -2, -1, 0},
+        };
+
         private RotateAction(Rotation rotation)
         {
             Rotation = rotation;
         }
 
         public Rotation Rotation { get; }
+
         public void Execute(ActionContext context)
         {
             var worker = context.WorkerWrapper;
@@ -25,17 +33,19 @@ namespace WorkerWrapper.Domain.Models.Actions
             }
 
             var diff = Rotation == Rotation.Clockwise ? 1 : -1;
-            worker.Direction = (RotateAction.Direction)((((int)worker.Direction + diff) % 4 + 4) % 4);
+            worker.Direction = (RotateAction.LookDirection)((((int)worker.Direction + diff) % 4 + 4) % 4);
 
             context.Mine.TryColorInYellow(worker.Position, worker.OrangePoints);
         }
 
-        public enum Direction
+        // If we change Up to -1, then rotation matrix can be replaced to
+        // nextDirection - currentDirection
+        public enum LookDirection
         {
             Right = 0,
-            Down,
-            Left,
-            Top
+            Down = 1,
+            Left = 2,
+            Up = 3
         }
     }
 }
