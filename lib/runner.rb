@@ -44,26 +44,31 @@ class Runner
 				start_time = Time.now.to_f
 
 				res = nil
-				IO.popen(cmd, 'w+') do |subprocess|
-					subprocess.print("hello #{i}\npello #{i}")
-					subprocess.close_write
-					res = subprocess.read
-				end
-
-				elapsed = (Time.now.to_f - start_time).round(3)
-
-				if $?.exitstatus == 0
-					if res.to_s.empty?
-						show_error "#{prefix} empty response with good exit code"
-						@processed_bad_qty += 1
-					else
-						output_path = File.join(OUTPUT_PATH, File.basename(filename, '.desc') + '.sol')
-						File.write(output_path, res)
-						show_output "%s success in %s ms" % [prefix, elapsed.to_s.colorize(:green)]
-						@processed_good_qty += 1
+				begin
+					IO.popen(cmd, 'w+', :err=> [:child, :out]) do |subprocess|
+						subprocess.print(File.read(input_path))
+						subprocess.close_write
+						res = subprocess.read
 					end
-				else
-					show_error "#{prefix} exit code: #{$?.exitstatus}"
+
+					elapsed = (Time.now.to_f - start_time).round(3)
+
+					if $?.exitstatus == 0
+						if res.to_s.empty?
+							show_error "#{prefix} empty response with good exit code"
+							@processed_bad_qty += 1
+						else
+							output_path = File.join(OUTPUT_PATH, File.basename(filename, '.desc') + '.sol')
+							File.write(output_path, res)
+							show_output "%s success in %s ms" % [prefix, elapsed.to_s.colorize(:green)]
+							@processed_good_qty += 1
+						end
+					else
+						show_error "%s exit code: %s\noutput: %s" % [prefix, $?.exitstatus, res.to_s.colorize(:light_red)]
+						@processed_bad_qty += 1
+					end
+				rescue
+					show_error "%s unknown error %s" % [prefix, $!.inspect]
 					@processed_bad_qty += 1
 				end
 			else
