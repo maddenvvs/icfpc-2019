@@ -67,6 +67,13 @@ namespace WorkerWrapper.Domain.Models
             }
 
             FillMoveableTiles();
+
+            FillWorkerStartTiles();
+        }
+
+        private void FillWorkerStartTiles()
+        {
+            TryColorInYellow(Worker.Position, Worker.OrangePoints);
         }
 
         public bool HasTilesToPaint { get => TilesPainted < TotalTilesToPaint; }

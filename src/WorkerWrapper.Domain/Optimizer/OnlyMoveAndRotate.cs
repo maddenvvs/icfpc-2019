@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WorkerWrapper.Domain.Geometry;
 using WorkerWrapper.Domain.Models;
 using WorkerWrapper.Domain.Models.Actions;
@@ -126,17 +127,21 @@ namespace WorkerWrapper.Domain.Optimizer
                 {
                     var nextPoint = startPoint + vector;
 
+                    if (parent.ContainsKey(nextPoint)) continue;
+
                     if (mine.NeedsToBePainted(nextPoint))
                     {
                         var path = new List<Point>();
-                        path.Add(initialPoint);
+                        path.Add(nextPoint);
 
-                        var curr = nextPoint;
+                        var curr = startPoint;
                         while (!curr.Equals(parent[curr]))
                         {
-                            curr = parent[curr];
                             path.Add(curr);
+                            curr = parent[curr];
                         }
+
+                        path.Add(initialPoint);
 
                         path.Reverse();
 
@@ -146,6 +151,7 @@ namespace WorkerWrapper.Domain.Optimizer
                     if (mine.IsPainted(nextPoint))
                     {
                         queue.Enqueue(nextPoint);
+                        parent[nextPoint] = startPoint;
                     }
                 }
             }

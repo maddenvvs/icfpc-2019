@@ -9,13 +9,13 @@ namespace WorkerWrapper.ConsoleApp
     {
         private readonly IOptimizer _optimizer;
         private readonly Mine _mine;
-        
-        
+
+
         public Executer(Mine mine, IOptimizer optimizer)
         {
             if (optimizer == null || mine == null)
                 throw new ArgumentNullException();
-            
+
             _optimizer = optimizer;
             _mine = mine;
         }
