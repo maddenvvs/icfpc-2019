@@ -4,12 +4,14 @@ require 'concurrent'
 
 class Runner
 	INPUT_PATH = File.join(__dir__, '..', 'input')
-	OUTPUT_PATH = File.join(__dir__, '..', 'output', Time.now.strftime('%Y-%m-%d_%H-%M-%S'))
+	OUTPUT_PATH = File.join(__dir__, '..', 'output')
+	REPORT_PERIOD = 30
 
 	attr_accessor :cpus
 
 	def initialize from, to
-		@processed_qty = 0
+		@processed_good_qty = 0
+		@processed_bad_qty = 0
 		@from = from
 		@to = to
 	end
@@ -17,18 +19,19 @@ class Runner
 	def start cmd
 		Dir.mkdir OUTPUT_PATH unless Dir.exist? OUTPUT_PATH
 
-		at_exit {
-			if Dir.empty? OUTPUT_PATH
-				puts "nothing processed, removing output dir"
-				Dir.unlink(OUTPUT_PATH)
-			end
-		}
-
 		cpus_qty = if @cpus < 1
 			Concurrent.physical_processor_count
 		else
 			@cpus
 		end
+
+		Thread.new {
+			loop do
+				sleep REPORT_PERIOD
+				show_stats
+			end
+		}
+		at_exit { show_stats }
 
 		Parallel.each(@from..@to, in_threads: cpus_qty) do |i|
 			prefix = "problem #{i}".colorize(:yellow)
@@ -52,21 +55,30 @@ class Runner
 				if $?.exitstatus == 0
 					if res.to_s.empty?
 						show_error "#{prefix} empty response with good exit code"
+						@processed_bad_qty += 1
 					else
 						output_path = File.join(OUTPUT_PATH, File.basename(filename, '.desc') + '.sol')
 						File.write(output_path, res)
 						show_output "%s success in %s ms" % [prefix, elapsed.to_s.colorize(:green)]
+						@processed_good_qty += 1
 					end
 				else
 					show_error "#{prefix} exit code: #{$?.exitstatus}"
+					@processed_bad_qty += 1
 				end
 			else
 				show_error "#{prefix} no problem file #{filename}"
+				@processed_bad_qty += 1
 			end
 		end
 	end
 
 	private
+
+	def show_stats
+		total = @to - @from + 1
+		show_info "processed %s/%s of %s" % [@processed_good_qty.to_s.colorize(:green), @processed_bad_qty.to_s.colorize(:light_red), total]
+	end
 
 	def show_output msg
 		puts msg
