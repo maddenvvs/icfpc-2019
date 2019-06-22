@@ -28,13 +28,64 @@ invert_black_dotes = black_dotes.map{|i| [i[0],max_y-i[1]]}
 # 	end
 # 	puts str
 # end
+@dots_in_line = []
 
-white_dotes.each do |wd1|
-	x1 = wd1[0].to_f
-	y1 = wd1[1].to_f
-	white_dotes.each do |wd2|
-		x2 = wd2[0].to_f
-		y2 = wd2[1].to_f
+def get_nex_dot current_dot, white_dotes
+	x1 = current_dot[0].to_f
+	y1 = current_dot[1].to_f
+	min_dest = nil
+	coords = nil
+	(white_dotes - @dots_in_line).each do |dot|
+		x2 = dot[0].to_f
+		y2 = dot[1].to_f
 		d = Math.sqrt((x2-x1)**2 + (y2-y1)**2)
+		if !min_dest || d < min_dest
+			min_dest = d
+			coords = dot
+		end
+	end
+
+	if @dots_in_line.length + 1 == white_dotes.length
+		x_first = @dots_in_line.first[0]
+		y_first = @dots_in_line.first[1]
+		x_free = (white_dotes - @dots_in_line).first[0]
+		y_free = (white_dotes - @dots_in_line).first[1]
+
+		d_current_last = Math.sqrt((x_free-x_first)**2 + (y_free-y_first)**2)
+		if d_current_last < min_dest
+			@dots_in_line.unshift([x_free, y_free])
+		end
+	end
+
+	coords
+end
+
+start_point = white_dotes.first
+@dots_in_line.push(start_point)
+
+while @dots_in_line.length < white_dotes.length
+	dot = get_nex_dot(start_point, white_dotes)
+	if dot
+		@dots_in_line.push(dot)
 	end
 end
+
+line_y = []
+(0..max_y).to_a.each do |y|
+	line_x = []
+	(0..max_x).to_a.each do |x|
+		if !white_dotes.include? [x,y] and !black_dotes.include? [x,y]
+			line_x.push('unset')
+		elsif white_dotes.include? [x,y]
+			line_x.push('included')
+		elsif black_dotes.include? [x,y]
+			line_x.push('excluded')
+		end
+	end
+	line_y.push(line_x)
+end
+
+result =  {
+	:line => @dots_in_line,
+	:coords => line_y
+}
