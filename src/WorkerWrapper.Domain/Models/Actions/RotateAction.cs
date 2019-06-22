@@ -30,6 +30,11 @@ namespace WorkerWrapper.Domain.Models.Actions
             context.Mine.TryColorInYellow(worker.Position, worker.OrangePoints);
         }
 
+        public string Print()
+        {
+            return Rotation == Rotation.Clockwise ? "E" : "Q";
+        }
+
         public enum Direction
         {
             Right = 0,

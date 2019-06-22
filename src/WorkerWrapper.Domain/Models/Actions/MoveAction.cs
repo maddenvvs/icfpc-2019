@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using WorkerWrapper.Domain.Geometry;
 
@@ -38,6 +39,18 @@ namespace WorkerWrapper.Domain.Models.Actions
         public void Execute(ActionContext context)
         {
             throw new System.NotImplementedException();
+        }
+
+        public string Print()
+        {
+            switch (Direction)
+            {
+                case MoveDirection.Up: return "W";
+                case MoveDirection.Down: return "S";
+                case MoveDirection.Left: return "A";
+                case MoveDirection.Right: return "D";
+                default: throw new Exception($"unknown directions type");
+            }
         }
 
         public enum MoveDirection

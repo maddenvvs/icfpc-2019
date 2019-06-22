@@ -3,6 +3,8 @@ namespace WorkerWrapper.Domain.Models.Actions
     public interface IWorkerWrapperAction
     {
         void Execute(ActionContext context);
+
+        string Print();
     }
 
     public class ActionContext

@@ -6,5 +6,10 @@ namespace WorkerWrapper.Domain.Models.Actions
         {
             throw new System.NotImplementedException();
         }
+
+        public string Print()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
