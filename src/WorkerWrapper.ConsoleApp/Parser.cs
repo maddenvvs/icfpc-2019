@@ -185,6 +185,7 @@ namespace WorkerWrapper.ConsoleApp
                     case 'F': return new KeyValuePair<Point, IBooster>(point,new FastWheels());
                     case 'L': return new KeyValuePair<Point, IBooster>(point,new Drill());
                     case 'R': return new KeyValuePair<Point, IBooster>(point,new TeleportBooster());
+                    case 'C': return new KeyValuePair<Point, IBooster>(point,new CloneBooster());
                     case 'X': return new KeyValuePair<Point, IBooster>(point,new XBooster());
                     default:
                       throw new Exception($"unknown booster type {boosterString[0]}");
