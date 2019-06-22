@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+require 'thor'
+require_relative '../lib/runner'
+
+class MyApp < Thor
+	default_task :process
+
+	desc "process CMD", 'run '
+	method_option :from, :type => :numeric, :default => 1
+	method_option :to, :type => :numeric, :default => 150
+	method_option :cpus, :type => :numeric, :default => -1
+	def process cmd
+		rnr = Runner.new(options[:from], options[:to])
+		rnr.cpus = options[:cpus]
+		rnr.start cmd
+	end
+end
+
+ARGV.unshift(MyApp.default_task) unless MyApp.all_tasks.has_key?(ARGV[0])
+MyApp.start(ARGV)
