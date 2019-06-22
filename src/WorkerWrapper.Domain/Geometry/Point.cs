@@ -34,6 +34,9 @@ namespace WorkerWrapper.Domain.Geometry
             return X == other.X && Y == other.Y;
         }
 
+        public override string ToString()
+            => $"({X},{Y})";
+
         public static Point operator +(Point first, Point second)
         {
             return new Point(first.X + second.X, first.Y + second.Y);

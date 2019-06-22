@@ -38,7 +38,23 @@ namespace WorkerWrapper.Domain.Models.Actions
 
         public void Execute(ActionContext context)
         {
-            throw new System.NotImplementedException();
+            var moveVector = Dir2Vec[Direction];
+            var worker = context.WorkerWrapper;
+            var nextWorkerPos = worker.Position + moveVector;
+
+            if (!context.Mine.IsTileReachable(nextWorkerPos))
+            {
+                throw new InvalidOperationException($"Cannot move worker at {worker.Position} to position {nextWorkerPos}");
+            }
+
+            worker.Position = nextWorkerPos;
+
+            for (var ii = 0; ii < worker.OrangePoints.Count; ii++)
+            {
+                worker.OrangePoints[ii] = worker.OrangePoints[ii] + moveVector;
+            }
+
+            context.Mine.TryColorInYellow(worker.Position, worker.OrangePoints);
         }
 
         public string Print()
