@@ -96,7 +96,7 @@ namespace WorkerWrapper.Domain.Geometry
                 // go left
                 else if (firstPoint.X > secondPoint.X)
                 {
-                    for (var x = firstPoint.X - 1; x <= secondPoint.X; x--)
+                    for (var x = firstPoint.X - 1; x >= secondPoint.X; x--)
                     {
                         yield return new Point(x, firstPoint.Y - 1);
                     }
@@ -143,7 +143,7 @@ namespace WorkerWrapper.Domain.Geometry
                 // go left
                 else if (firstPoint.X > secondPoint.X)
                 {
-                    for (var x = firstPoint.X - 1; x <= secondPoint.X; x--)
+                    for (var x = firstPoint.X - 1; x >= secondPoint.X; x--)
                     {
                         yield return new Point(x, firstPoint.Y);
                     }
