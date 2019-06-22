@@ -7,7 +7,7 @@ class MyApp < Thor
 
 	desc "process CMD", 'run '
 	method_option :from, :type => :numeric, :default => 1
-	method_option :to, :type => :numeric, :default => 150
+	method_option :to, :type => :numeric, :default => 300
 	method_option :cpus, :type => :numeric, :default => -1
 	def process cmd
 		rnr = Runner.new(options[:from], options[:to])
