@@ -45,6 +45,10 @@ namespace WorkerWrapper.Domain.Models
 
         public Dictionary<Point, IBooster> Boosters { get; }
 
+        public int TotalTilesToPaint { get; private set; }
+
+        public int TilesPainted { get; private set; }
+
         public Dictionary<Point, MineColor> ColorMap { get; }
 
         public void InitializeMapColor()
@@ -65,8 +69,16 @@ namespace WorkerWrapper.Domain.Models
             FillMoveableTiles();
         }
 
+        public bool HasTilesToPaint { get => TilesPainted < TotalTilesToPaint; }
+
         public bool IsTileReachable(Point p) =>
             ColorMap.ContainsKey(p) && ColorMap[p] != MineColor.Black;
+
+        public bool NeedsToBePainted(Point p) =>
+            IsTileReachable(p) && ColorMap[p] == MineColor.Grey;
+
+        public bool IsPainted(Point p) =>
+            IsTileReachable(p) && ColorMap[p] == MineColor.Yellow;
 
         public void TryColorInYellow(Point workerPosition, List<Point> orangePoints)
         {
@@ -81,7 +93,8 @@ namespace WorkerWrapper.Domain.Models
                 if (ColorMap[point] != MineColor.Yellow)
                 {
                     ColorMap[point] = MineColor.Yellow;
-                    // TODO: increment count of colored tiles
+
+                    TilesPainted += 1;
                 }
             }
         }
@@ -91,6 +104,9 @@ namespace WorkerWrapper.Domain.Models
             var stack = new Stack<Point>();
             stack.Push(Worker.Position);
             ColorMap[Worker.Position] = MineColor.Grey;
+
+            TilesPainted = 0;
+            TotalTilesToPaint = 1;
 
             while (stack.Count > 0)
             {
@@ -105,7 +121,7 @@ namespace WorkerWrapper.Domain.Models
                         stack.Push(nextPoint);
                         ColorMap[nextPoint] = MineColor.Grey;
 
-                        // TODO: increment counter of total tiles to color
+                        TotalTilesToPaint += 1;
                     }
                 }
             }
