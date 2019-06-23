@@ -597,3 +597,5 @@ fabric.properties
 /docs
 /.vscode
 /sol
+\.idea/\.idea\.ICFPC-2019/\.idea/
+
