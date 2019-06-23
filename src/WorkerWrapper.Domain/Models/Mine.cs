@@ -71,6 +71,11 @@ namespace WorkerWrapper.Domain.Models
             FillWorkerStartTiles();
         }
 
+        public Mine Clone()
+        {
+            return new Mine(Contour, Worker.Position, Obstacles, Boosters);
+        }
+
         private void FillWorkerStartTiles()
         {
             TryColorInYellow(Worker.Position, Worker.OrangePoints);

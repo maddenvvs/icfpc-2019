@@ -12,7 +12,7 @@ namespace WorkerWrapper.Domain.Optimizer
                 //TODO add new optimizers here
                 case "OMR":
                 default:
-                    return new OnlyMoveAndRotateV2();
+                    return new ChooseBestOfAll();
             }
         }
     }
