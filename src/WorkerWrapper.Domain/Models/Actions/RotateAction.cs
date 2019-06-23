@@ -16,6 +16,15 @@ namespace WorkerWrapper.Domain.Models.Actions
             new int[] {1, -2, -1, 0},
         };
 
+        public static readonly Dictionary<Point, LookDirection> Vec2Look =
+            new Dictionary<Point, LookDirection>
+            {
+                {new Point(1, 0), LookDirection.Right},
+                {new Point(-1, 0), LookDirection.Left},
+                {new Point(0, 1), LookDirection.Up},
+                {new Point(0, -1), LookDirection.Down},
+            };
+
         public static readonly Dictionary<LookDirection, Point[]> Look2VecSuggestion = new Dictionary<LookDirection, Point[]>()
         {
             {LookDirection.Right, new Point[4] { new Point(1, 0), new Point(0, 1), new Point(0, -1), new Point(-1, 0) }},

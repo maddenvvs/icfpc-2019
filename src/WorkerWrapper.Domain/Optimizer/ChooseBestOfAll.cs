@@ -15,6 +15,7 @@ namespace WorkerWrapper.Domain.Optimizer
                 new OnlyMoveAndRotate(),
                 new OnlyMoveAndRotateV2(),
                 new OnlyMoveAndRotateV3(),
+                new OnlyMoveAndRotateDijkstra(),
             })
         {
         }
