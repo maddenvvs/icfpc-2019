@@ -51,7 +51,7 @@ def draw_a_star_path map_with_a_b_points, start_point_coords, end_point_coords
 
 	# Loading external file with the dungeon
 	dungeon = map_with_a_b_points.reverse.map do |row_y|
-		row_y = row_y.map{|point| r = " "; r = "#" if point == "excluded" || point == "*"; r = point if point == "A" || point == "B";	r}
+		row_y = row_y.map{|point| r = " "; r = "#" if point == "excluded"; r = point if point == "A" || point == "B";	r}
 		row_y.join()
 	end
 	dungeon = dungeon.join("\n")
@@ -167,14 +167,7 @@ while !line_dots.empty?
 	
 	map_with_current_path = draw_a_star_path map_with_all_paths, start_point_coords, end_point_coords
 	map_with_all_paths = add_path_to_map map_with_current_path, map_with_all_paths
-	p line_dots.length
 end
-#Соединяем последнюю точку линии и первую точку
-start_point_coords = result[:line].first
-end_point_coords = result[:line].last
-
-map_with_current_path = draw_a_star_path map_with_all_paths, start_point_coords, end_point_coords
-map_with_all_paths = add_path_to_map map_with_current_path, map_with_all_paths
 
 #Преобразуем массив для записи в файл
 printed_to_file_map = map_with_all_paths.reverse.map do |row_y|
