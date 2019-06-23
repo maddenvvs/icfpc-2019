@@ -45,6 +45,47 @@ def get_nex_dot current_dot, white_dotes
 	coords
 end
 
+def draw_a_star_path map_with_a_b_points, start_point_coords, end_point_coords
+	map_with_a_b_points[start_point_coords[1]][start_point_coords[0]] = 'A'
+	map_with_a_b_points[end_point_coords[1]][end_point_coords[0]] = 'B'
+
+	# Loading external file with the dungeon
+	dungeon = map_with_a_b_points.reverse.map do |row_y|
+		row_y = row_y.map{|point| r = " "; r = "#" if point == "excluded" || point == "*"; r = point if point == "A" || point == "B";	r}
+		row_y.join()
+	end
+	dungeon = dungeon.join("\n")
+
+	# Creating the graph
+	graph = Graph.new(dungeon)
+	# Creating the astar object
+	astar = ASTAR.new(graph.start, graph.stop)
+	# Performing the search
+	path  = astar.search
+
+	graph.to_s(path)
+end
+
+def add_path_to_map map_with_current_path, map_with_all_paths
+	normalized_map_with_current_path = map_with_current_path.reverse.map{|y_row| y_row.split('')}
+	lines_y = []
+	(0..(map_with_all_paths.length-1)).to_a.each do |y|
+		line_x = []
+		(0..(map_with_all_paths[y].length-1)).to_a.each do |x|
+			point = map_with_all_paths[y][x]
+			if normalized_map_with_current_path[y][x].match(/[AB\*]/)
+				point = '*'
+			end
+			if map_with_all_paths[y][x] == '*'
+				point = '*'
+			end
+			line_x.push(point)
+		end
+		lines_y.push(line_x)
+	end
+	lines_y
+end
+
 iSqs = "(73,61),(49,125),(73,110),(98,49),(126,89),(68,102),(51,132),(101,123),(22,132),(71,120),(97,129),(118,76),(85,100),(88,22),(84,144),(93,110),(96,93),(113,138),(91,52),(27,128),(84,140),(93,143),(83,17),(123,85),(50,74),(139,97),(101,110),(77,56),(86,23),(117,59),(133,126),(83,135),(76,90),(70,12),(12,141),(116,87),(102,76),(19,138),(86,129),(86,128),(83,60),(100,98),(60,105),(61,103),(94,99),(130,124),(141,132),(68,84),(86,143),(72,119)"
 
 oSqs = "(145,82),(20,65),(138,99),(38,137),(85,8),(125,104),(117,48),(57,48),(64,119),(3,25),(40,22),(82,54),(121,119),(1,34),(43,98),(97,120),(10,90),(15,32),(41,13),(86,40),(3,83),(2,127),(4,40),(139,18),(96,49),(53,22),(5,103),(112,33),(38,47),(16,121),(133,99),(113,45),(50,5),(94,144),(16,0),(93,113),(18,141),(36,25),(56,120),(3,126),(143,144),(99,62),(144,117),(48,97),(69,9),(0,9),(141,16),(55,68),(81,3),(47,53)"
@@ -115,29 +156,33 @@ result =  {
     "cannot load required file #{l}" unless load l
 end
 
-map_with_a_b_points = result[:coords]
-line_dots = result[:line]
-start_point_coords = line_dots.shift
+line_dots = result[:line].clone
 end_point_coords = line_dots.shift
-map_with_a_b_points[start_point_coords[1]][start_point_coords[0]] = 'A'
-map_with_a_b_points[end_point_coords[1]][end_point_coords[0]] = 'B'
+map_with_all_paths = result[:coords].clone
 
-# Loading external file with the dungeon
-dungeon = map_with_a_b_points.reverse.map do |row_y|
-	row_y = row_y.map{|point| r = " "; r = "#" if point == "excluded"; r = point if point == "A" || point == "B";	r}
+while !line_dots.empty?
+	start_point_coords = end_point_coords
+	end_point_coords = line_dots.shift
+
+	
+	map_with_current_path = draw_a_star_path map_with_all_paths, start_point_coords, end_point_coords
+	map_with_all_paths = add_path_to_map map_with_current_path, map_with_all_paths
+	p line_dots.length
+end
+#Соединяем последнюю точку линии и первую точку
+start_point_coords = result[:line].first
+end_point_coords = result[:line].last
+
+map_with_current_path = draw_a_star_path map_with_all_paths, start_point_coords, end_point_coords
+map_with_all_paths = add_path_to_map map_with_current_path, map_with_all_paths
+
+#Преобразуем массив для записи в файл
+printed_to_file_map = map_with_all_paths.reverse.map do |row_y|
+	row_y = row_y.map{|point| r = " "; r = "#" if point == "excluded"; r = "*" if point == "*";	r}
 	row_y.join()
 end
-dungeon = dungeon.join("\n")
-
-# Creating the graph
-graph = Graph.new(dungeon)
-# Creating the astar object
-astar = ASTAR.new(graph.start, graph.stop)
-# Performing the search
-path  = astar.search
-# Printing the result on screen
-map = graph.to_s(path)
+printed_to_file_map = printed_to_file_map.join("\n")
 
 f = File.new("map.txt", "w")
-f.write(map.join("\n"))     #=> 10
+f.write(printed_to_file_map)
 f.close
