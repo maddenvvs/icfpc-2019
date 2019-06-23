@@ -25,6 +25,7 @@ class Runner
 			@cpus
 		end
 
+		# status displaying
 		Thread.new {
 			loop do
 				sleep REPORT_PERIOD
@@ -33,6 +34,7 @@ class Runner
 		}
 		at_exit { show_stats }
 
+		# parallel processing magic
 		Parallel.each(@from..@to, in_threads: cpus_qty) do |i|
 			prefix = "problem #{i}".colorize(:yellow)
 			filename = get_problem_filename i
@@ -45,6 +47,7 @@ class Runner
 
 				res = nil
 				begin
+					# executing problem solving
 					IO.popen(cmd, 'w+', :err=> [:child, :out]) do |subprocess|
 						subprocess.print(File.read(input_path))
 						subprocess.close_write
@@ -53,6 +56,7 @@ class Runner
 
 					elapsed = (Time.now.to_f - start_time).round(3)
 
+					# result processing
 					if $?.exitstatus == 0
 						if res.to_s.empty?
 							show_error "#{prefix} empty response with good exit code"

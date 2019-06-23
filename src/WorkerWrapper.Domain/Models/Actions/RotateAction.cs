@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using WorkerWrapper.Domain.Geometry;
 
 namespace WorkerWrapper.Domain.Models.Actions
@@ -13,6 +14,14 @@ namespace WorkerWrapper.Domain.Models.Actions
             new int[] {-1, 0, 1, 2},
             new int[] {-2, -1, 0, 1},
             new int[] {1, -2, -1, 0},
+        };
+
+        public static readonly Dictionary<LookDirection, Point[]> Look2VecSuggestion = new Dictionary<LookDirection, Point[]>()
+        {
+            {LookDirection.Right, new Point[4] { new Point(1, 0), new Point(0, 1), new Point(0, -1), new Point(-1, 0) }},
+            {LookDirection.Down, new Point[4] { new Point(0, -1), new Point(1, 0), new Point(-1, 0), new Point(0, 1) }},
+            {LookDirection.Left, new Point[4] { new Point(-1, 0), new Point(0, -1), new Point(0, 1), new Point(1, 0) }},
+            {LookDirection.Up, new Point[4] { new Point(0, 1), new Point(1, 0), new Point(-1, 0), new Point(0, -1) }},
         };
 
         private RotateAction(Rotation rotation)
