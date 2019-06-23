@@ -595,3 +595,4 @@ fabric.properties
 # End of https://www.gitignore.io/api/rider,csharp,visualstudio,visualstudiocode
 
 /docs
+\.idea/\.idea\.ICFPC-2019/\.idea/
