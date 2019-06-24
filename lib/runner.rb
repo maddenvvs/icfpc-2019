@@ -64,7 +64,7 @@ class Runner
 						else
 							output_path = File.join(OUTPUT_PATH, File.basename(filename, '.desc') + '.sol')
 							File.write(output_path, res)
-							show_output "%s success in %s ms" % [prefix, elapsed.to_s.colorize(:green)]
+							show_output "%s success in %s s" % [prefix, elapsed.to_s.colorize(:green)]
 							@processed_good_qty += 1
 						end
 					else
